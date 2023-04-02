@@ -10,78 +10,25 @@
 # Description: OpenWrt DIY script part 2 (After Update feeds)
 #
 
-# Add luci-app-ssr-plus
-pushd package/lean
-git clone --depth=1 https://github.com/fw876/helloworld
-popd
-
 # Clone community packages to package/community
 mkdir package/community
 pushd package/community
-
-# Add Lienol's Packages
-git clone --depth=1 https://github.com/Lienol/openwrt-package
-rm -rf ../lean/luci-app-kodexplorer
-
-# Add immortalwrt's Packages
-git clone --depth=1 -b openwrt-18.06 https://github.com/immortalwrt/packages
-git clone --depth=1 -b openwrt-18.06-k5.4 https://github.com/immortalwrt/luci
-cp -r ../luci/applications/luci-app-adguardhome ../package/lean//luci-app-adguardhome
-
-# Add luci-app-passwall
-git clone --depth=1 https://github.com/xiaorouji/openwrt-passwall
-
-# Add luci-app-vssr <M>
-git clone --depth=1 https://github.com/jerrykuku/lua-maxminddb.git
-git clone --depth=1 https://github.com/jerrykuku/luci-app-vssr
-
-# Add luci-proto-minieap
-git clone --depth=1 https://github.com/ysc3839/luci-proto-minieap
-
-# Add ServerChan
-git clone --depth=1 https://github.com/tty228/luci-app-serverchan
-
-# Add OpenClash
-git clone --depth=1 -b master https://github.com/vernesong/OpenClash
-
-# Add luci-app-onliner
-git clone --depth=1 https://github.com/rufengsuixing/luci-app-onliner
 
 # Add luci-app-diskman
 git clone --depth=1 https://github.com/SuLingGG/luci-app-diskman
 mkdir parted
 cp luci-app-diskman/Parted.Makefile parted/Makefile
 
-# Add luci-app-dockerman
-rm -rf ../lean/luci-app-docker
-git clone --depth=1 https://github.com/lisaac/luci-app-dockerman
-git clone --depth=1 https://github.com/lisaac/luci-lib-docker
-
 # Add luci-theme-argon
 git clone --depth=1 -b 18.06 https://github.com/jerrykuku/luci-theme-argon
 git clone --depth=1 https://github.com/jerrykuku/luci-app-argon-config
 rm -rf ../lean/luci-theme-argon
 
-# Add subconverter
-git clone --depth=1 https://github.com/tindy2013/openwrt-subconverter
-
-# Add luci-udptools
-#svn co https://github.com/zcy85611/Openwrt-Package/trunk/luci-udptools
-#svn co https://github.com/zcy85611/Openwrt-Package/trunk/udp2raw
-#svn co https://github.com/zcy85611/Openwrt-Package/trunk/udpspeeder-tunnel
-
-# Add OpenAppFilter
-git clone --depth 1 -b oaf-3.0.1 https://github.com/destan19/OpenAppFilter.git
-
-# Add luci-app-oled (R2S Only)
-git clone --depth=1 https://github.com/NateLol/luci-app-oled
-
 # Add extra wireless drivers
-svn co https://github.com/immortalwrt/immortalwrt/branches/openwrt-18.06-k5.4/package/kernel/rtl8812au-ac
-svn co https://github.com/immortalwrt/immortalwrt/branches/openwrt-18.06-k5.4/package/kernel/rtl8821cu
-svn co https://github.com/immortalwrt/immortalwrt/branches/openwrt-18.06-k5.4/package/kernel/rtl8188eu
-#svn co https://github.com/immortalwrt/immortalwrt/branches/openwrt-18.06-k5.4/package/kernel/rtl8192du
-svn co https://github.com/immortalwrt/immortalwrt/branches/openwrt-18.06-k5.4/package/kernel/rtl88x2bu
+#svn co https://github.com/immortalwrt/immortalwrt/branches/openwrt-18.06-k5.4/package/kernel/rtl8812au-ac
+#svn co https://github.com/immortalwrt/immortalwrt/branches/openwrt-18.06-k5.4/package/kernel/rtl8821cu
+#svn co https://github.com/immortalwrt/immortalwrt/branches/openwrt-18.06-k5.4/package/kernel/rtl8188eu
+#svn co https://github.com/immortalwrt/immortalwrt/branches/openwrt-18.06-k5.4/package/kernel/rtl88x2bu
 
 # Add apk (Apk Packages Manager)
 svn co https://github.com/openwrt/packages/trunk/utils/apk
@@ -116,5 +63,30 @@ sed -i 's/\/bin\/ash/\/usr\/bin\/zsh/g' package/base-files/files/etc/passwd
 
 # Modify default IP
 sed -i 's/192.168.1.1/192.168.2.1/g' package/base-files/files/bin/config_generate
-sed -i '/uci commit system/i\uci set system.@system[0].hostname='AeWrt'' package/lean/default-settings/files/zzz-default-settings
-sed -i "s/OpenWrt /AlexELEC build $(TZ=UTC+3 date "+%Y.%m.%d") @ AeWrt /g" package/lean/default-settings/files/zzz-default-settings
+
+# create /opt
+sed -i "/\/usr\/bin\/ip/a mkdir \/opt" package/lean/default-settings/files/zzz-default-settings
+
+# Modify vesrsion
+sed -i '/uci commit system/i\uci set system.@system[0].hostname='RouterAE'' package/lean/default-settings/files/zzz-default-settings
+sed -i "s/OpenWrt /AlexELEC build $(TZ=UTC+3 date "+%Y.%m.%d") @ OpenWrt /g" package/lean/default-settings/files/zzz-default-settings
+
+# Modify default language, timezone
+sed -i "s/uci set luci\.main\.lang\=zh_cn/uci set luci\.main\.lang\=en/g" package/lean/default-settings/files/zzz-default-settings
+sed -i "s/uci set system\.@system\[0\]\.timezone\=CST\-8/uci set system\.@system\[0\]\.timezone\='EET\-2EEST\,M3\.5\.0\/3\,M10\.5\.0\/4'/g" package/lean/default-settings/files/zzz-default-settings
+sed -i "s/uci set system\.@system\[0\]\.zonename\=Asia\/Shanghai/uci set system\.@system\[0\]\.zonename\='Europe\/Kiev'/g" package/lean/default-settings/files/zzz-default-settings
+
+sed -i "/uci commit system/i uci set system.ntp.server=''" package/lean/default-settings/files/zzz-default-settings
+sed -i "/uci commit system/i uci add_list system.ntp.server=time.windows.com" package/lean/default-settings/files/zzz-default-settings
+sed -i "/uci commit system/i uci add_list system.ntp.server=1.europe.pool.ntp.org" package/lean/default-settings/files/zzz-default-settings
+sed -i "/uci commit system/i uci add_list system.ntp.server=2.europe.pool.ntp.org" package/lean/default-settings/files/zzz-default-settings
+sed -i "/uci commit system/i uci add_list system.ntp.server=3.europe.pool.ntp.org" package/lean/default-settings/files/zzz-default-settings
+
+sed -i "/uci commit system/a uci commit ntpclient" package/lean/default-settings/files/zzz-default-settings
+sed -i "/uci commit ntpclient/i uci set ntpclient.@ntpserver[3].hostname='3.europe.pool.ntp.org'" package/lean/default-settings/files/zzz-default-settings
+sed -i "/uci commit ntpclient/i uci set ntpclient.@ntpserver[2].hostname='2.europe.pool.ntp.org'" package/lean/default-settings/files/zzz-default-settings
+sed -i "/uci commit ntpclient/i uci set ntpclient.@ntpserver[1].hostname='1.europe.pool.ntp.org'" package/lean/default-settings/files/zzz-default-settings
+sed -i "/uci commit ntpclient/i uci set ntpclient.@ntpserver[0].hostname='time.windows.com'" package/lean/default-settings/files/zzz-default-settings
+
+# Modify luci default language
+sed -i "s/set luci\.main\.lang\=zh_cn/set luci\.main\.lang\=en/g" feeds/luci/modules/luci-base/root/etc/uci-defaults/luci-base

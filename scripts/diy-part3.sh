@@ -54,14 +54,29 @@ sed -i 's/\/bin\/ash/\/usr\/bin\/zsh/g' package/base-files/files/etc/passwd
 # Modify default IP
 sed -i 's/192.168.1.1/192.168.2.1/g' package/base-files/files/bin/config_generate
 
+# create /opt
+sed -i "/\/usr\/bin\/ip/a mkdir \/opt" package/lean/default-settings/files/zzz-default-settings
+
 # Modify vesrsion
-sed -i '/uci commit system/i\uci set system.@system[0].hostname='AeWrt'' package/lean/default-settings/files/zzz-default-settings
-sed -i "s/OpenWrt /AlexELEC build $(TZ=UTC+3 date "+%Y.%m.%d") @ AeWrt /g" package/lean/default-settings/files/zzz-default-settings
+sed -i '/uci commit system/i\uci set system.@system[0].hostname='RouterAE'' package/lean/default-settings/files/zzz-default-settings
+sed -i "s/OpenWrt /AlexELEC build $(TZ=UTC+3 date "+%Y.%m.%d") @ OpenWrt /g" package/lean/default-settings/files/zzz-default-settings
 
 # Modify default language, timezone
 sed -i "s/uci set luci\.main\.lang\=zh_cn/uci set luci\.main\.lang\=en/g" package/lean/default-settings/files/zzz-default-settings
 sed -i "s/uci set system\.@system\[0\]\.timezone\=CST\-8/uci set system\.@system\[0\]\.timezone\='EET\-2EEST\,M3\.5\.0\/3\,M10\.5\.0\/4'/g" package/lean/default-settings/files/zzz-default-settings
 sed -i "s/uci set system\.@system\[0\]\.zonename\=Asia\/Shanghai/uci set system\.@system\[0\]\.zonename\='Europe\/Kiev'/g" package/lean/default-settings/files/zzz-default-settings
+
+sed -i "/uci commit system/i uci set system.ntp.server=''" package/lean/default-settings/files/zzz-default-settings
+sed -i "/uci commit system/i uci add_list system.ntp.server=time.windows.com" package/lean/default-settings/files/zzz-default-settings
+sed -i "/uci commit system/i uci add_list system.ntp.server=1.europe.pool.ntp.org" package/lean/default-settings/files/zzz-default-settings
+sed -i "/uci commit system/i uci add_list system.ntp.server=2.europe.pool.ntp.org" package/lean/default-settings/files/zzz-default-settings
+sed -i "/uci commit system/i uci add_list system.ntp.server=3.europe.pool.ntp.org" package/lean/default-settings/files/zzz-default-settings
+
+sed -i "/uci commit system/a uci commit ntpclient" package/lean/default-settings/files/zzz-default-settings
+sed -i "/uci commit ntpclient/i uci set ntpclient.@ntpserver[3].hostname='3.europe.pool.ntp.org'" package/lean/default-settings/files/zzz-default-settings
+sed -i "/uci commit ntpclient/i uci set ntpclient.@ntpserver[2].hostname='2.europe.pool.ntp.org'" package/lean/default-settings/files/zzz-default-settings
+sed -i "/uci commit ntpclient/i uci set ntpclient.@ntpserver[1].hostname='1.europe.pool.ntp.org'" package/lean/default-settings/files/zzz-default-settings
+sed -i "/uci commit ntpclient/i uci set ntpclient.@ntpserver[0].hostname='time.windows.com'" package/lean/default-settings/files/zzz-default-settings
 
 # Modify luci default language
 sed -i "s/set luci\.main\.lang\=zh_cn/set luci\.main\.lang\=en/g" feeds/luci/modules/luci-base/root/etc/uci-defaults/luci-base
