@@ -50,3 +50,6 @@ sed -i "s/OpenWrt /AlexELEC build $(TZ=UTC+3 date "+%Y.%m.%d") @ OpenWrt /g" pac
 sed -i "s/uci set luci\.main\.lang\=zh_cn/uci set luci\.main\.lang\=en/g" package/lean/default-settings/files/zzz-default-settings
 sed -i "s/uci set system\.@system\[0\]\.timezone\=CST\-8/uci set system\.@system\[0\]\.timezone\='EET\-2EEST\,M3\.5\.0\/3\,M10\.5\.0\/4'/g" package/lean/default-settings/files/zzz-default-settings
 sed -i "s/uci set system\.@system\[0\]\.zonename\=Asia\/Shanghai/uci set system\.@system\[0\]\.zonename\='Europe\/Kiev'/g" package/lean/default-settings/files/zzz-default-settings
+
+# Modify luci default language
+sed -i "s/set luci\.main\.lang\=zh_cn/set luci\.main\.lang\=en/g" feeds/luci/modules/luci-base/root/etc/uci-defaults/luci-base
