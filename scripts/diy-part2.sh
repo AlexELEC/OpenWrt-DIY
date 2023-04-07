@@ -10,28 +10,9 @@
 # Description: OpenWrt DIY script part 2 (After Update feeds)
 #
 
-# Add luci-app-ssr-plus
-pushd package/lean
-git clone --depth=1 https://github.com/fw876/helloworld
-popd
-
 # Clone community packages to package/community
 mkdir package/community
 pushd package/community
-
-# Add Lienol's Packages
-git clone --depth=1 https://github.com/Lienol/openwrt-package
-rm -rf ../lean/luci-app-kodexplorer
-
-# Add immortalwrt's Packages
-git clone --depth=1 -b openwrt-18.06 https://github.com/immortalwrt/packages
-git clone --depth=1 -b openwrt-18.06-k5.4 https://github.com/immortalwrt/luci
-cp -r ../luci/applications/luci-app-adguardhome ../package/lean//luci-app-adguardhome
-
-# Add luci-theme-argon
-git clone --depth=1 -b 18.06 https://github.com/jerrykuku/luci-theme-argon
-git clone --depth=1 https://github.com/jerrykuku/luci-app-argon-config
-rm -rf ../lean/luci-theme-argon
 
 # Add extra wireless drivers
 #svn co https://github.com/immortalwrt/immortalwrt/branches/openwrt-18.06-k5.4/package/kernel/rtl8812au-ac
